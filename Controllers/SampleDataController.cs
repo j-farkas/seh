@@ -9,13 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace seh.Controllers
 {
     [Route("api/[controller]")]
-    public class DataController : Controller
+    public class SampleDataController : Controller
     {
 
-        [HttpGet("[action]")]
-        public IEnumerable<Images> ImageList()
+        [HttpGet("[action]/{words}")]
+        public string ImageList(string words)
         {
-
+          string rawData = Images.GetImages(words);
+          return rawData;
+        //  return Images.GetImageList(rawData);
         }
 
         public class Images
@@ -47,9 +49,23 @@ namespace seh.Controllers
             return data;
 
           }
-          public static List<Images> GetImageList(string RawHTML)
+          public static List<Images> GetImageList(string html)
           {
+            var images = new List<Images>();
+            int i = html.IndexOf("class=\"images_table\"", StringComparison.Ordinal);
+            i = html.IndexOf("<img", i, StringComparison.Ordinal);
 
+            while( i >= 0)
+            {
+              i = html.IndexOf("src=\"", i, StringComparison.Ordinal);
+              i+=5;
+              int j = html.IndexOf("\"",i,StringComparison.Ordinal);
+              string uri = html.Substring(i, j - i);
+              images.Add(new Images(uri));
+              i = html.IndexOf("<img", i, StringComparison.Ordinal);
+
+            }
+            return images;
           }
         }
     }
