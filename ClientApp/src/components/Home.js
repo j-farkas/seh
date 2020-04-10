@@ -33,12 +33,15 @@ getImages(words){
             <input type = 'text' id ='title' name = 'title' value = {this.state.title} onChange={this.handleChange}/>
           </label>
           <br></br>
-          <label>Text:
+          <label>Text: (Use (b) before a word to bold it)
             <textarea type = 'textarea' rows = '5'
               cols = '65' id ='text' name = 'text'/>
           </label>
           <h3 onClick={()=>this.getImages(this.state.title)}>Submit</h3>
         </form>
+          {this.state.images.map( (e,index)=>
+                <img  id = {index} src = {e.imageURI} onClick={(index, e.imageURI)=>this.selectImage}/>
+          )}
       </div>
     );
   }

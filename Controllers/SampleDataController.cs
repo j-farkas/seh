@@ -13,11 +13,11 @@ namespace seh.Controllers
     {
 
         [HttpGet("[action]/{words}")]
-        public string ImageList(string words)
+        public List<Images> ImageList(string words)
         {
           string rawData = Images.GetImages(words);
-          return rawData;
-        //  return Images.GetImageList(rawData);
+          // return rawData;
+         return Images.GetImageList(rawData);
         }
 
         public class Images
@@ -51,18 +51,22 @@ namespace seh.Controllers
           }
           public static List<Images> GetImageList(string html)
           {
-            var images = new List<Images>();
-            int i = html.IndexOf("class=\"images_table\"", StringComparison.Ordinal);
-            i = html.IndexOf("<img", i, StringComparison.Ordinal);
 
-            while( i >= 0)
+            List<Images> images = new List<Images>();
+              int i = html.IndexOf("heirloom", StringComparison.Ordinal);
+              i = html.IndexOf("<img", i, StringComparison.Ordinal);
+             Console.WriteLine(html);
+             int loops = 0;
+            while( i >= 0 && loops < 20)
             {
               i = html.IndexOf("src=\"", i, StringComparison.Ordinal);
               i+=5;
               int j = html.IndexOf("\"",i,StringComparison.Ordinal);
               string uri = html.Substring(i, j - i);
+              Console.WriteLine(uri);
               images.Add(new Images(uri));
               i = html.IndexOf("<img", i, StringComparison.Ordinal);
+              loops++;
 
             }
             return images;
