@@ -1,4 +1,6 @@
 using System;
+using System.Net;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,32 +20,37 @@ namespace seh.Controllers
 
         public class Images
         {
+
             public string ImageURI { get; set; }
-        }
+            public Images(string URI)
+            {
+              ImageURI = URI;
+            }
 
-        public static string GetImages(string Words)
-        {
-          string url = "https://www.google.com/search?q=" + topics + "&tbm=isch";
-          string data = "";
-
-          var request = (HttpWebRequest)WebRequest.Create(url);
-          var response = (HttpWebResponse)request.GetResponse();
-
-          using (Stream dataStream = response.GetResponseSteam())
+          public static string GetImages(string Words)
           {
-              if(dataStream == null)
-                return "";
-              using (var sr = newStreamReader(dataStream))
-              {
-                data = sr.ReadToEnd();
-              }
-          }
-          return data;
+            string url = "https://www.google.com/search?q=" + Words + "&tbm=isch";
+            string data = "";
 
-        }
-        public static FormatImageText(string RawHTML)
-        {
-          
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            var response = (HttpWebResponse)request.GetResponse();
+
+            using (Stream dataStream = response.GetResponseStream())
+            {
+                if(dataStream == null)
+                  return "";
+                using (var sr = new StreamReader(dataStream))
+                {
+                  data = sr.ReadToEnd();
+                }
+            }
+            return data;
+
+          }
+          public static List<Images> GetImageList(string RawHTML)
+          {
+
+          }
         }
     }
 }
